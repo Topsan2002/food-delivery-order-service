@@ -6,7 +6,6 @@ import com.fooddelivery.orderservice.service.OrderService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -38,8 +37,7 @@ class OrderController {
 
     @PutMapping("/customer/status/{order-id}/{status}")
     fun updateOrderStatusCustomer(@PathVariable("order-id") orderId: String,@PathVariable("status") status: String): ResponseEntity<Any> {
-        return  ResponseEntity.ok(orderService.updateOrderStatus(orderId,status))
+        return  ResponseEntity.ok(orderService.updateOrderStatusCustomer(orderId,status))
     }
-
 
 }

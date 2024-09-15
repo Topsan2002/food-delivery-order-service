@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 @Service
 @RequiredArgsConstructor
 class OrderService(
-    private val customerClient: CustomerClient // Ensure this is properly inj
+    private val customerClient: CustomerClient
 ) {
     @Autowired
     lateinit var orderRepository: OrderRepository
@@ -91,7 +91,7 @@ class OrderService(
     fun updateOrderStatus(orderId: String, orderStatus: String) : ServiceFormat {
         val orderData =  orderRepository.findOrderByOrderId(orderId.toLong())
         val currentTime =  LocalDateTime.now()
-        if(orderData != null && orderData.orderStatus != orderStatus){
+        if(orderData != null && checkOrderStatus(orderStatus, orderData.orderStatus)){
             orderData.orderStatus = orderStatus
             orderData.updatedAt = currentTime
             orderRepository.save(orderData)
@@ -118,7 +118,7 @@ class OrderService(
     fun updateOrderStatusRider(orderId: String, orderStatus: String, riderId:String) : ServiceFormat {
         val orderData =  orderRepository.findOrderByOrderId(orderId.toLong())
         val currentTime =  LocalDateTime.now()
-        if(orderData != null && orderData.orderStatus != orderStatus){
+        if(orderData != null && checkOrderStatus(orderStatus, orderData.orderStatus)){
             orderData.orderStatus = orderStatus
             orderData.updatedAt = currentTime
             orderRepository.save(orderData)
@@ -143,5 +143,37 @@ class OrderService(
         )
     }
 
+    fun updateOrderStatusCustomer(orderId: String, orderStatus: String) : ServiceFormat {
+        val orderData =  orderRepository.findOrderByOrderId(orderId.toLong())
+        val currentTime =  LocalDateTime.now()
+        if(orderData != null && checkOrderStatus(orderStatus, orderData.orderStatus)){
+            orderData.orderStatus = orderStatus
+            orderData.updatedAt = currentTime
+            orderRepository.save(orderData)
+            orderStatusRepository.save(OrderStatus(
+                orderId = orderData.orderId!!,
+                orderStatus = orderData.orderStatus,
+                changerId = orderData.customerId,
+                changerBy = "CUSTOMER",
+                createAt = currentTime,
+                updateAt = currentTime,
+            ))
+            return ServiceFormat(
+                message = "Updated Order Status Successfully",
+                data = orderData,
+                error = null,
+            )
+        }
+        return ServiceFormat(
+            message = "Updated Order Status Fail",
+            data = null,
+            error = "order not not found",
+        )
+    }
+
+
+    fun checkOrderStatus(status : String , orderStatus : String) : Boolean{
+        return !(status == orderStatus || orderStatus == "CANCEL" || orderStatus == "COMPLETED")
+    }
 
 }
