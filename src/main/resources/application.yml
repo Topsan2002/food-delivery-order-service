@@ -1,0 +1,8 @@
+spring:
+  config:
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8888}
+#    customer-url: ${CUSTOMER_URL:http://localhost:8093/api/v1/customer}
+  application:
+    name: food-delivery-order-service
+server:
+  port: 8088
