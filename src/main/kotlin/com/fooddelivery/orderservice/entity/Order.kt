@@ -1,5 +1,6 @@
 package com.fooddelivery.orderservice.entity
 
+import com.fooddelivery.orderservice.dto.OrderResponseDto
 import jakarta.persistence.*
 import lombok.*
 import java.time.LocalDateTime
@@ -44,3 +45,27 @@ data class Order(
     @OneToMany(mappedBy = "orderId", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var orderStatusList: List<OrderStatus> = mutableListOf()
 )
+fun Order.toOrderResponseDto(
+    customerName: String,
+    restaurantName: String,
+    riderName: String?,
+    getMenuItemName: (Long) -> String? // A lambda function to fetch menu name by menuItemId
+): OrderResponseDto {
+    return OrderResponseDto(
+        orderId = this.orderId,
+        customerId = this.customerId,
+        customerName = customerName,
+        restaurantId = this.restaurantId,
+        restaurantName = restaurantName,
+        riderId = this.riderId,
+        riderName = riderName,
+        orderTotal = this.orderTotal,
+        orderStatus = this.orderStatus,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt,
+        orderItems = this.orderItems.map {
+            it.toOrderItemResponseDto(getMenuItemName(it.menuItemId))
+        }, // Map each OrderItem to OrderItemResponseDto with the menuName
+        orderStatusList = this.orderStatusList
+    )
+}

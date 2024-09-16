@@ -1,7 +1,7 @@
 package com.fooddelivery.orderservice.dto
 
 @JvmRecord
-data class CustomerResponse(
+data class CustomerResponseDto(
     val id: String,
     val firstname: String,
     val lastname: String,

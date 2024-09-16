@@ -14,11 +14,6 @@ class GlobalExceptionHandler {
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String>> {
         val errors = ex.bindingResult.fieldErrors
             .associate { it.field to it.defaultMessage.orEmpty() }
-        // Log errors for debuggingu8
-        println("Validation errors: $errors")
-        println("Validation errors: $errors")
-        println("Validation errors: $errors")
-        println("Validation errors: $errors")
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
 }

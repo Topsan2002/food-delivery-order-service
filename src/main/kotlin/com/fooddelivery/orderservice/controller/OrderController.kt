@@ -1,6 +1,7 @@
 package com.fooddelivery.orderservice.controller
 
 import com.fooddelivery.orderservice.dto.OrderRequestBodyDto
+import com.fooddelivery.orderservice.dto.OrderResponseDto
 import com.fooddelivery.orderservice.entity.Order
 import com.fooddelivery.orderservice.service.OrderService
 import jakarta.validation.Valid
@@ -15,9 +16,23 @@ class OrderController {
     private lateinit var orderService: OrderService
 
 
+    @GetMapping("/{orderId}")
+    fun getOrderById(@PathVariable("orderId") orderId: String): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(orderService.getOrderById(orderId.toLong()))
+    }
+
     @GetMapping("/customer/{customer-id}")
-    fun getOrders(@PathVariable("customer-id") cusId: String): ResponseEntity<List<Order>?> {
+    fun getOrdersCustomer(@PathVariable("customer-id") cusId: String): ResponseEntity<Any?> {
         return  ResponseEntity.ok().body(orderService.getOrderByCustomerId(cusId.toLong()))
+    }
+    @GetMapping("/rider/{rider-id}")
+    fun getOrdersRider(@PathVariable("rider-id") id: String): ResponseEntity<Any?> {
+        return  ResponseEntity.ok().body(orderService.getOrderByRiderId(id.toLong()))
+    }
+
+    @GetMapping("/restaurant/{restaurant-id}")
+    fun getOrdersRestaurant(@PathVariable("restaurant-id") id: String): ResponseEntity<Any?> {
+        return  ResponseEntity.ok().body(orderService.getOrderByRestaurantId(id.toLong()))
     }
 
     @PostMapping("")
@@ -25,19 +40,24 @@ class OrderController {
         return ResponseEntity.ok().body(orderService.createOrder(order))
     }
 
-    @PutMapping("/restaurant/status/{order-id}/{status}")
-    fun updateOrderStatusRestaurant(@PathVariable("order-id") orderId: String,@PathVariable("status") status: String): ResponseEntity<Any> {
-        return  ResponseEntity.ok(orderService.updateOrderStatus(orderId,status))
+    @PutMapping("/restaurant/status/{order-id}")
+    fun updateOrderStatusRestaurant(@PathVariable("order-id") orderId: String): ResponseEntity<Any> {
+        return  ResponseEntity.ok(orderService.updateOrderStatus(orderId))
     }
 
-    @PutMapping("/rider/status/{rider-id}/{order-id}/{status}")
-    fun updateOrderStatusRider(@PathVariable("rider-id")  riderId: String, @PathVariable("order-id") orderId: String,@PathVariable("status") status: String): ResponseEntity<Any> {
-        return  ResponseEntity.ok(orderService.updateOrderStatusRider(orderId,status, riderId))
+    @PutMapping("/rider/{rider-id}/status/{order-id}")
+    fun updateOrderStatusRider(@PathVariable("rider-id")  riderId: String, @PathVariable("order-id") orderId: String): ResponseEntity<Any> {
+        return  ResponseEntity.ok(orderService.updateOrderStatusRider(orderId, riderId))
     }
 
-    @PutMapping("/customer/status/{order-id}/{status}")
-    fun updateOrderStatusCustomer(@PathVariable("order-id") orderId: String,@PathVariable("status") status: String): ResponseEntity<Any> {
-        return  ResponseEntity.ok(orderService.updateOrderStatusCustomer(orderId,status))
+    @PutMapping("/customer/cancel/{order-id}")
+    fun updateOrderStatusCustomer(@PathVariable("order-id") orderId: String): ResponseEntity<Any> {
+        return  ResponseEntity.ok(orderService.updateOrderCancel(orderId, "CUSTOMER"))
+    }
+
+    @PutMapping("/restaurant/cancel/{order-id}")
+    fun updateOrderCancelRestaurant(@PathVariable("order-id") orderId: String): ResponseEntity<Any> {
+        return  ResponseEntity.ok(orderService.updateOrderCancel(orderId,"RESTAURANT"))
     }
 
 }

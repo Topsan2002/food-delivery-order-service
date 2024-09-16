@@ -1,5 +1,6 @@
 package com.fooddelivery.orderservice.entity
 
+import com.fooddelivery.orderservice.dto.OrderItemResponseDto
 import jakarta.persistence.*
 import lombok.*
 import java.time.LocalDateTime
@@ -38,3 +39,16 @@ data class OrderItem(
     @Column(name = "update_at")
     var updatedAt: LocalDateTime
 )
+fun OrderItem.toOrderItemResponseDto(menuName: String?): OrderItemResponseDto {
+    return OrderItemResponseDto(
+        orderItemId = this.orderItemId,
+        orderId = this.orderId,
+        menuItemId = this.menuItemId,
+        menuName = menuName,
+        detail = this.detail,
+        quantity = this.quantity,
+        price = this.price,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt
+    )
+}

@@ -1,5 +1,6 @@
 package com.fooddelivery.orderservice.dto
 
+import com.fooddelivery.orderservice.entity.Order
 import com.fooddelivery.orderservice.entity.OrderItem
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -31,3 +32,16 @@ data class OrderRequestBodyDto(
     @field:Valid
     val orderItems: List<OrderItemRequestBodyDto> = mutableListOf()
 )
+
+fun OrderRequestBodyDto.toOrder(): Order {
+    val currentTime = LocalDateTime.now()
+    return Order(
+        customerId = this.customerId!!,
+        restaurantId = this.restaurantId!!,
+        riderId = this.riderId!!,
+        orderTotal = this.orderTotal!!,
+        orderStatus = "PENDING",
+        createdAt = currentTime,
+        updatedAt = currentTime
+    )
+}
