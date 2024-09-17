@@ -14,7 +14,7 @@ data class OrderResponseDto(
     var customerName: String,
     var restaurantId: Long,
     var restaurantName: String,
-    var riderId: Long,
+    var riderId: Long?,
     var riderName: String?,
     var orderTotal: Float,
     var orderStatus: String,

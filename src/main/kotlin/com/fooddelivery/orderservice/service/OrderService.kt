@@ -42,7 +42,7 @@ class OrderService(
              it.toOrderResponseDto(
                 customerName = "${customerData!!.firstname} ${customerData.lastname}",
                 restaurantName = restaurantData!!.name!!,
-                riderName = "${riderData!!.firstname} ${riderData.lastname}",
+                riderName = "${riderData?.firstname} ${riderData?.lastname}",
                 getMenuItemName = { menuItemId ->
                     restaurantClient.getMenuById(menuItemId.toString())!!.menuName
                 }
@@ -60,7 +60,7 @@ class OrderService(
             it.toOrderResponseDto(
                 customerName = "${customerData!!.firstname} ${customerData.lastname}",
                 restaurantName = restaurantData!!.name!!,
-                riderName = "${riderData!!.firstname} ${riderData.lastname}",
+                riderName = "${riderData?.firstname} ${riderData?.lastname}",
                 getMenuItemName = { menuItemId ->
                     restaurantClient.getMenuById(menuItemId.toString())!!.menuName
                 }
@@ -78,7 +78,7 @@ class OrderService(
             it.toOrderResponseDto(
                 customerName = "${customerData!!.firstname} ${customerData.lastname}",
                 restaurantName = restaurantData!!.name!!,
-                riderName = "${riderData!!.firstname} ${riderData.lastname}",
+                riderName = "${riderData?.firstname} ${riderData?.lastname}",
                 getMenuItemName = { menuItemId ->
                     restaurantClient.getMenuById(menuItemId.toString())!!.menuName
                 }
@@ -172,6 +172,7 @@ class OrderService(
         if(orderData != null ){
             if (orderData.orderStatus == "COOKING" || orderData.orderStatus == "DELIVERING"){
                 orderData.orderStatus = nextStatus(orderData.orderStatus)
+                orderData.riderId = riderId.toLong()
                 orderData.updatedAt = currentTime
                 orderRepository.save(orderData)
                 orderStatusRepository.save(OrderStatus(
@@ -262,7 +263,7 @@ class OrderService(
             val orderResponseDto = orderData.toOrderResponseDto(
                 customerName = "${customerData!!.firstname} ${customerData.lastname}",
                 restaurantName = restaurantData!!.name!!,
-                riderName = "${riderData!!.firstname} ${riderData.lastname}",
+                riderName = "${riderData?.firstname} ${riderData?.lastname}",
                 getMenuItemName = { menuItemId ->
                     restaurantClient.getMenuById(menuItemId.toString())!!.menuName
                 }

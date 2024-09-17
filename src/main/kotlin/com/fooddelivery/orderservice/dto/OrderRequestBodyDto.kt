@@ -21,9 +21,6 @@ data class OrderRequestBodyDto(
     @field:NotNull(message = "Restaurant ID must not be null")
     val restaurantId: Long?,
 
-    @field:NotNull(message = "Rider ID must not be null")
-    val riderId: Long?,
-
     @field:Positive(message = "Order total must be greater than 0")
     val orderTotal: Float?,
 
@@ -38,7 +35,7 @@ fun OrderRequestBodyDto.toOrder(): Order {
     return Order(
         customerId = this.customerId!!,
         restaurantId = this.restaurantId!!,
-        riderId = this.riderId!!,
+        riderId = 0,
         orderTotal = this.orderTotal!!,
         orderStatus = "PENDING",
         createdAt = currentTime,

@@ -25,7 +25,7 @@ data class Order(
     var restaurantId: Long,
 
     @Column(name = "rider_id")
-    var riderId: Long,
+    var riderId: Long?,
 
     @Column(name = "order_total")
     var orderTotal: Float,
